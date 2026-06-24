@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { startTransition, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Download, ImagePlus, LoaderCircle, Sparkles, WandSparkles } from "lucide-react";
@@ -52,7 +52,9 @@ export function ChatExperience() {
   const [isGeneratingPortfolio, setIsGeneratingPortfolio] = useState(false);
   const [status, setStatus] = useState("Tell Code Port about your background to start building.");
   const [error, setError] = useState("");
-  const [isConversationAtTop, setIsConversationAtTop] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hasUserMessages = useMemo(() => messages.some((m) => m.role === "user"), [messages]);
+  const [isConversationAtTop, setIsConversationAtTop] = useState(!hasUserMessages);
 
   const previewData = useDeferredValue(resumeData);
 
@@ -158,6 +160,16 @@ export function ChatExperience() {
     return () => window.clearTimeout(timeout);
   }, [messages, projectId, resumeData]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    if (hasUserMessages) {
+      setIsConversationAtTop(false);
+    }
+  }, [hasUserMessages]);
+
   async function submitMessage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const trimmed = input.trim();
@@ -172,6 +184,7 @@ export function ChatExperience() {
     setInput("");
     setIsSending(true);
     setMessages(nextConversation);
+    setIsConversationAtTop(false);
 
     try {
       const response = await fetch("/api/chat", {
@@ -344,17 +357,17 @@ export function ChatExperience() {
                 <motion.div
                   initial={false}
                   animate={{
-                    height: isConversationAtTop ? "auto" : 0,
-                    opacity: isConversationAtTop ? 1 : 0,
-                    marginTop: isConversationAtTop ? 0 : -4,
+                    height: isConversationAtTop && !hasUserMessages ? "auto" : 0,
+                    opacity: isConversationAtTop && !hasUserMessages ? 1 : 0,
+                    marginTop: isConversationAtTop && !hasUserMessages ? 0 : -4,
                   }}
                   transition={{ duration: 0.28, ease: "easeOut" }}
                   className="max-w-2xl space-y-3 overflow-hidden"
                 >
-                  <h1 className="serif-display max-w-3xl text-4xl leading-tight text-[var(--foreground)] sm:text-5xl">
+                  <h1 className="serif-display max-w-3xl text-xl leading-tight text-[var(--foreground)] sm:text-2xl">
                     An AI resume studio that turns a conversation into your next professional identity.
                   </h1>
-                  <p className="max-w-2xl text-sm leading-7 text-[rgba(22,49,60,0.72)] sm:text-base">
+                  <p className="max-w-2xl text-xs leading-6 text-[rgba(22,49,60,0.72)] sm:text-sm">
                     Share your background in a guided chat. Code Port shapes the resume live, exports a polished PDF, and can launch your animated 3D portfolio in one click.
                   </p>
                 </motion.div>
@@ -412,6 +425,7 @@ export function ChatExperience() {
                       </div>
                     </div>
                   ) : null}
+                  <div ref={messagesEndRef} />
                 </div>
 
                 <form onSubmit={submitMessage} className="space-y-3">
@@ -419,6 +433,7 @@ export function ChatExperience() {
                     <textarea
                       value={input}
                       onChange={(event) => setInput(event.target.value)}
+                      onFocus={() => setIsConversationAtTop(false)}
                       placeholder="Answer naturally. Code Port will structure the details into your resume automatically."
                       className="h-28 w-full resize-none bg-transparent px-2 py-1 text-sm leading-7 text-[var(--foreground)] outline-none placeholder:text-[rgba(22,49,60,0.42)]"
                     />
