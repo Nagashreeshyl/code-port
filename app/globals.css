@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4efe6;
+  --background-strong: #e3d8cb;
+  --foreground: #16313c;
+  --muted: #56717b;
+  --line: rgba(22, 49, 60, 0.12);
+  --glass: rgba(255, 255, 255, 0.3);
+  --glass-strong: rgba(255, 255, 255, 0.52);
+  --accent: #2f7f81;
+  --accent-soft: #8db7b3;
+  --accent-warm: #c68c5d;
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-fraunces);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-manrope);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(141, 183, 179, 0.42), transparent 34%),
+    radial-gradient(circle at top right, rgba(198, 140, 93, 0.16), transparent 22%),
+    linear-gradient(180deg, #f8f3eb 0%, #efe7db 100%);
+  color: var(--foreground);
+  font-family: var(--font-manrope), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(47, 127, 129, 0.18);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(22, 49, 60, 0.18);
+  border-radius: 999px;
+}
+
+.glass-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.18));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 18px 60px rgba(45, 73, 88, 0.12);
+  backdrop-filter: blur(24px) saturate(150%);
+}
+
+.glass-chip {
+  background: rgba(255, 255, 255, 0.36);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(18px);
+}
+
+.liquid-button {
+  background: linear-gradient(135deg, var(--accent) 0%, #4aa7a8 100%);
+  box-shadow: 0 18px 32px rgba(47, 127, 129, 0.22);
+}
+
+.liquid-outline {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.serif-display {
+  font-family: var(--font-fraunces), serif;
+}
+
+.mesh-overlay {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65), transparent 85%);
+}
+
+.section-title {
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.73rem;
+  color: rgba(22, 49, 60, 0.58);
+}
+
+.resume-text {
+  color: rgba(22, 49, 60, 0.82);
+}
